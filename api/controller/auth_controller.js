@@ -1,8 +1,10 @@
 const brcypt = require("bcrypt");
 const prisma = require("../lib/prismaClient");
 const jwt=require('jsonwebtoken')
+
 const registerNewUser = async (req, res) => {
   try {
+    // console.log(req.body)
     const { username, email, password } = req.body;
     const salt = await brcypt.genSalt(10);
     const hashPassword = await brcypt.hash(password, salt);
@@ -15,12 +17,12 @@ const registerNewUser = async (req, res) => {
       },
     });
     return res.send(newuser);
-    // console.log(req.body)
   } catch (error) {
     console.log(error);
-    return res.status(501).json({ message: error.message });
+    return res.status(501).json({ message: "Failed to create account!" });
   }
 };
+
 const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -38,12 +40,14 @@ const loginUser = async (req, res) => {
     const age = 1000 * 60 * 60 * 24 * 7; // 1 week
 
     const token =jwt.sign({
-        id:user.id
+        id:user.id,
+        isAdmin:true
     },process.env.JWT_SECERT_KEY,{
         expiresIn:age,
         algorithm:"HS384"
     })
-    console.log(token)
+    // console.log(token)
+    const {password:userpassword,...userinfo}=user
     return res
       .cookie("jwtToken", token, {
         httpOnly: true,
@@ -51,7 +55,7 @@ const loginUser = async (req, res) => {
         maxAge: age,  // session expire time
       })
       .status(200)
-      .json("Login Successful");
+      .json(userinfo);
   } catch (error) {
     console.log(error);
     res.status(501).json({ message: error.message });
@@ -61,7 +65,7 @@ const loginUser = async (req, res) => {
 const logoutUser = async (req, res) => {
   try {
     return res
-      .cookie("jwtToken","")
+      .clearCookie("jwtToken")
       .status(200)
       .json("Logout Successful");
   } catch (error) {

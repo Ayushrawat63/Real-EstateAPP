@@ -1,10 +1,48 @@
+import { useContext, useState } from "react";
 import "./profileUpdatePage.scss";
+import { useNavigate } from "react-router-dom";
+import apiRequest from "../../lib/apiRequest";
+import { AuthContext } from "../../context/AuthContext";
+
 
 function ProfileUpdatePage() {
+  const [formdata, setformdata] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+  const { currentUser, updateUser } = useContext(AuthContext);
+  const [resError, setResError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    // console.log(e)
+    // console.log(e.target.value)
+    setformdata({ ...formdata, [e.target.name]: e.target.value });
+  };
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    setResError("");
+    setIsLoading(true);
+    try {
+        const res= await apiRequest.put(`/users/update/${currentUser.id}`,formdata)
+        console.log(res.data)
+        updateUser(res.data)
+        navigate('/profile')
+    } catch (error) {
+      // console.error('Error submitting data:', error);
+      setResError(error.response.data.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="profileUpdatePage">
       <div className="formContainer">
-        <form>
+        <form onSubmit={submitHandler}>
           <h1>Update Profile</h1>
           <div className="item">
             <label htmlFor="username">Username</label>
@@ -12,6 +50,8 @@ function ProfileUpdatePage() {
               id="username"
               name="username"
               type="text"
+              defaultValue={currentUser.username}
+              onChange={handleChange}
             />
           </div>
           <div className="item">
@@ -20,17 +60,29 @@ function ProfileUpdatePage() {
               id="email"
               name="email"
               type="email"
+              onChange={handleChange}
+              defaultValue={currentUser.email}
             />
           </div>
           <div className="item">
             <label htmlFor="password">Password</label>
-            <input id="password" name="password" type="password" />
+            <input
+              id="password"
+              name="password"
+              type="password"
+              onChange={handleChange}
+            />
           </div>
-          <button>Update</button>
+          {resError && <span>{resError}</span>} 
+          <button disabled={isLoading}>Update</button>
         </form>
       </div>
       <div className="sideContainer">
-        <img src="" alt="" className="avatar" />
+        <img
+          src={currentUser.avatar || "/newpic.jpg"}
+          alt="profileImage"
+          className="avatar"
+        />
       </div>
     </div>
   );

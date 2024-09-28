@@ -1,19 +1,25 @@
-const express= require('express')
-const cookieParser=require('cookie-parser')
-require('dotenv').config()
-const app=express();
-const authRouter=require('./routes/auth_routes')
-const postRouter=require('./routes/post_routes')
-const userRouter=require('./routes/user_routes')
+const express = require("express");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+require("dotenv").config();
+const app = express();
+const authRouter = require("./routes/auth_routes");
+const postRouter = require("./routes/post_routes");
+const userRouter = require("./routes/user_routes");
+const testRouter = require("./routes/test_routes");
 
-app.use(express.json())
-app.use(cookieParser())
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(express.json());
+app.use(cookieParser());
 
-app.use('/api/posts',postRouter)
-app.use('/api/auth',authRouter)
-app.use('/api/user',userRouter)
+// app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use("/api/posts", postRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/users", userRouter);
+app.use("/api/test", testRouter);
 
-app.listen(3003,()=>{
-    console.log("server started")
-})
+app.listen(3003, () => {
+  console.log("server started");
+});
