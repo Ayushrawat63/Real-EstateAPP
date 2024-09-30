@@ -6,8 +6,10 @@ function Filter() {
       <h1>
         Search results for <b>London</b>
       </h1>
+      <form>
       <div className="top">
         <div className="item">
+
           <label htmlFor="city">Location</label>
           <input
             type="text"
@@ -22,18 +24,18 @@ function Filter() {
           <label htmlFor="type">Type</label>
           <select name="type" id="type">
             <option value="">any</option>
-            <option value="buy">Buy</option>
-            <option value="rent">Rent</option>
+            <option value="Buy">Buy</option>
+            <option value="Rent">Rent</option>
           </select>
         </div>
         <div className="item">
           <label htmlFor="property">Property</label>
           <select name="property" id="property">
             <option value="">any</option>
-            <option value="apartment">Apartment</option>
-            <option value="house">House</option>
-            <option value="condo">Condo</option>
-            <option value="land">Land</option>
+            <option value="Apartment">Apartment</option>
+            <option value="House">House</option>
+            <option value="Condo">Condo</option>
+            <option value="Land">Land</option>
           </select>
         </div>
         <div className="item">
@@ -63,10 +65,11 @@ function Filter() {
             placeholder="any"
           />
         </div>
-        <button>
+        <button onClick={()=>{console.log("click botton")}}>
           <img src="/search.png" alt="" />
         </button>
       </div>
+      </form>
     </div>
   );
 }

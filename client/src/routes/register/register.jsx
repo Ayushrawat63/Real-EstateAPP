@@ -23,7 +23,7 @@ function Register() {
     setResError("")
     setIsLoading(true)
     try{
-       const res= await apiRequest.post("/auth/register",formdata) ;
+        await apiRequest.post("/auth/register",formdata) ;
       //  console.log(res)
       //  console.log(res.data)
        navigate('/login')

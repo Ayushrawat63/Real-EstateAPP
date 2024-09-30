@@ -20,10 +20,6 @@ function Layout() {
 function RequiredAuthLayout() {
 
   const {currentUser}=useContext(AuthContext)
-
-
-
-  
   return  (
     !currentUser?  (<Navigate to="/login"/>) : (
     <div className="layout">

@@ -3,16 +3,19 @@ import "./profileUpdatePage.scss";
 import { useNavigate } from "react-router-dom";
 import apiRequest from "../../lib/apiRequest";
 import { AuthContext } from "../../context/AuthContext";
+import UploadWidget from "../../components/uploadWidget/UploadWidget";
 
 
 function ProfileUpdatePage() {
+  const { currentUser, updateUser } = useContext(AuthContext);
+  // console.log(currentUser)
   const [formdata, setformdata] = useState({
-    username: "",
-    email: "",
+    username: currentUser.username,
+    email: currentUser.email,
     password: "",
   });
-  const { currentUser, updateUser } = useContext(AuthContext);
   const [resError, setResError] = useState("");
+  const [avatar, setAvatar] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -27,7 +30,7 @@ function ProfileUpdatePage() {
     setResError("");
     setIsLoading(true);
     try {
-        const res= await apiRequest.put(`/users/update/${currentUser.id}`,formdata)
+        const res= await apiRequest.put(`/users/update/${currentUser.id}`,{...formdata,avatar:avatar[0]})
         console.log(res.data)
         updateUser(res.data)
         navigate('/profile')
@@ -79,10 +82,20 @@ function ProfileUpdatePage() {
       </div>
       <div className="sideContainer">
         <img
-          src={currentUser.avatar || "/newpic.jpg"}
+          src={avatar[0] || currentUser.avatar || "/newpic.jpg"}
           alt="profileImage"
           className="avatar"
         />
+        <UploadWidget uwConfig={
+         { 
+          cloudName:"ayushcloud64",
+          uploadPreset:"Estate",
+          multiple:false,
+          maxImageFileSize:2000000,
+          folder:"avatar"
+         }
+        }
+        setState={setAvatar}/>
       </div>
     </div>
   );
