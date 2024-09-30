@@ -70,9 +70,71 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const savePost = async (req, res) => {
+  const userId = req.payload.id;
+  const postId=req.body.postId;
+  try {
+    const savedPost=await prisma.savePost.findUnique({
+      where:{
+        userId_postId:{
+          userId,
+          postId
+        }
+      }
+    })
+
+    if(!savedPost){
+      const savepost=await prisma.savePost.create({
+        data:{
+          userId,
+          postId
+        }
+      })
+      return res.status(200).json(savepost);
+    }
+    else{
+      await prisma.savePost.delete({
+        where:{
+          id:savedPost.id
+        }
+      })
+      return res.status(200).json("Unsaved the post");
+    }
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Failed to add Post!" });
+  }
+};
+
+const profilePosts = async (req, res) => {
+  const userId = req.payload.id;
+  try {
+     const posts =await prisma.post.findMany({
+      where:{
+        userId
+      }
+     })
+     const saved = await prisma.savePost.findMany({
+      where:{
+        userId
+      },
+      include:{
+        post:true
+      }
+     })
+     const savedPosts= saved.map((save)=>{return save.post})
+     res.status(200).json({posts,savedPosts})
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Failed to add Post!" });
+  }
+};
+
 module.exports = {
   allUsers,
   uniqueUser,
   updateUser,
   deleteUser,
+  savePost,
+  profilePosts
 };

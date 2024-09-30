@@ -13,33 +13,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id String  @id  @default(auto()) @map("_id") @db.ObjectId
-  username String  @unique
-  email String  @unique
-  password String
-  avatar String?
-  createdAt  DateTime @default(now())
-  post Post[] 
+model User {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  username  String     @unique
+  email     String     @unique
+  password  String
+  avatar    String?
+  createdAt DateTime   @default(now())
+  post      Post[]
+  savePost  SavePost[]
 }
 
-model Post{
-  id String  @id  @default(auto()) @map("_id") @db.ObjectId
-  title String  @unique
-  price Int
-  images String[]
-  address String
-  city String
-  bedroom  Int
-  bathroom Int
-  latitude String
-  longitude String
-  type Type
-  property Property
-  createdAt  DateTime @default(now())
-  user User @relation(fields: [userId],references: [id])
-  userId String @db.ObjectId
+model Post {
+  id         String       @id @default(auto()) @map("_id") @db.ObjectId
+  title      String       @unique
+  price      Int
+  images     String[]
+  address    String
+  city       String
+  bedroom    Int
+  bathroom   Int
+  latitude   String
+  longitude  String
+  type       Type
+  property   Property
+  createdAt  DateTime     @default(now())
+  user       User         @relation(fields: [userId], references: [id])
+  userId     String       @db.ObjectId
   postDetail PostDetails?
+  savePost   SavePost[]
 }
 
 enum Type {
@@ -48,22 +50,33 @@ enum Type {
 }
 
 enum Property {
-   Apartment
-   House
-   Condo
-   Land
+  Apartment
+  House
+  Condo
+  Land
 }
 
-model PostDetails{
-  id String  @id  @default(auto()) @map("_id") @db.ObjectId
-  desc String
-  utilities String?
-  pet String?
-  income Int?
-  size Int?
-  school Int?
-  bus Int?
+model PostDetails {
+  id         String  @id @default(auto()) @map("_id") @db.ObjectId
+  desc       String
+  utilities  String?
+  pet        String?
+  income     Int?
+  size       Int?
+  school     Int?
+  bus        Int?
   restaurant Int?
-  post Post @relation(fields: [postId],references: [id])
-  postId String @db.ObjectId @unique
-  }
+  post       Post    @relation(fields: [postId], references: [id])
+  postId     String  @unique @db.ObjectId
+}
+
+model SavePost {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  post      Post     @relation(fields: [postId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String   @unique @db.ObjectId
+  postId    String   @unique @db.ObjectId
+  createdAt DateTime @default(now())
+
+  @@unique([userId,postId])
+}

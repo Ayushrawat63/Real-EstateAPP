@@ -1,6 +1,7 @@
 const express=require('express')
-const { getPosts, getPost, addPost, updatePost, deletePost, deleteAllPost } = require('../controller/post_controller')
+const { getPosts, getPost, addPost, updatePost, deletePost, deleteAllPost} = require('../controller/post_controller')
 const verifyToken = require('../middleware/verifyToken')
+
 
 const router= express.Router()
 
