@@ -3,7 +3,7 @@ import Card from"../card/Card"
 // import {listData} from"../../lib/dummydata"
 
 function List({posts}){
-  console.log(posts)
+  // console.log(posts)
   return (
     <div className='list'>
        {posts.map(item=>(

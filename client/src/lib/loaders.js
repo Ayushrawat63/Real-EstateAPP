@@ -17,8 +17,10 @@ const listPageLoader=async({request,params})=>{
 }
 const profilePageLoader=async()=>{
     const postsPromise=  apiRequest("/users/profilePosts");
+    const chatsPromise=  apiRequest("/chats");
     return defer({
-       postsResponse:postsPromise
+       postsResponse:postsPromise,
+       chatsResponse:chatsPromise
     })
     
 }
