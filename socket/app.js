@@ -13,7 +13,7 @@ app.use(cors())
 const io = new Server(httpServer,
     {
     cors:{
-        origin:"https://boisterous-sawine-38f5a7.netlify.app/"
+        origin:"https://boisterous-sawine-38f5a7.netlify.app"
     },
 })
 
