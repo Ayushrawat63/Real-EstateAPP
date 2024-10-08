@@ -12,6 +12,8 @@ import Register from "./routes/register/register";
 import ProfileUpdatePage from "./routes/profileUpdatePage/profileUpdatePage";
 import NewPostPage from "./routes/newPostPage/newPostPage";
 import { listPageLoader, profilePageLoader, singlePageLoader } from "./lib/loaders";
+import AboutPage from "./routes/aboutPage/AboutPage";
+import Contact from "./routes/contact/Contact";
 
 
 function App() {
@@ -41,6 +43,14 @@ function App() {
         {
           path:"/register",
           element:<Register/>
+        },
+        {
+          path:"/about",
+          element:<AboutPage/>
+        },
+        {
+          path:"/contact",
+          element:<Contact/>
         }
       ]
     },

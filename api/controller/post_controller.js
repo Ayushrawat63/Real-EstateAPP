@@ -35,9 +35,10 @@ const getPost = async (req, res) => {
         user: {
           select: {
             username: true,
-            avatar: true,
+            avatar: true
           },
         },
+        savePost:true
       },
     });
     if (!post) return res.status(401).json({ message: "post does not exits" });

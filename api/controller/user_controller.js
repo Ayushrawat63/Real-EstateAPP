@@ -15,13 +15,19 @@ const uniqueUser = async (req, res) => {
     if(data.id!=id) return res.status(403).json({message:"Not Autherized"})
   try {
      const user= await prisma.user.findUnique({
-        where:{id:data.id}
+        where:{id:data.id},
+        include:{
+          post:true,
+          savePost:true,
+          chats:true
+        }
      })
      res.status(200).json(user)
   } catch (err) {
     res.status(500).json({message:"Failed to fetch unique user!"});
   }
 };
+
 const updateUser = async (req, res) => {
     const id=req.params.id;
     // console.log(id)
@@ -42,8 +48,7 @@ const updateUser = async (req, res) => {
         data:{
             ...body,
             ...(hasedPassword && {password:hasedPassword}),
-            ...(avatar && {avatar})
-            
+            ...(avatar && {avatar})            
         }
      })
      const {password:updatedPassword,...userinfo}=updatedUser
@@ -53,6 +58,7 @@ const updateUser = async (req, res) => {
     res.status(500).json({message:"Failed to update user!"});
   }
 };
+
 const deleteUser = async (req, res) => {
     const id=req.params.id;
     // console.log(id)
